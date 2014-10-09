@@ -25,7 +25,6 @@ public:
 
 private:
 	char** getArgv(string command);
-	char** getEnv();
 	string* getPaths(char *path, int &size);
 
 };

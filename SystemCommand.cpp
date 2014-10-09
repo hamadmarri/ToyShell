@@ -28,7 +28,6 @@ bool SystemCommand::execute() {
 	string fileName = this->commandStr.substr(0, this->commandStr.find(" "));
 	string progName = this->commandStr;
 	char **argv = this->getArgv(this->commandStr);
-	char **env = this->getEnv();
 	int pathsCount;
 	string *paths = this->getPaths(getenv("PATH"), pathsCount);
 	int childPid;
@@ -78,9 +77,6 @@ char** SystemCommand::getArgv(string command) {
 	return argv;
 }
 
-char** SystemCommand::getEnv() {
-	return environ;
-}
 
 string* SystemCommand::getPaths(char *path, int &size) {
 	OneLine ol(":");
