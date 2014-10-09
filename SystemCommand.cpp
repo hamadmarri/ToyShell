@@ -9,8 +9,11 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <errno.h>
 #include <cstring>
 #include "oneline.h"
+
+extern char **environ;
 
 SystemCommand::SystemCommand(string command) {
 	this->setCommand(command);
@@ -22,22 +25,36 @@ SystemCommand::~SystemCommand() {
 
 bool SystemCommand::execute() {
 
-	string path = "/bin/"
-			+ this->commandStr.substr(0, this->commandStr.find(" "));
+	string fileName = this->commandStr.substr(0, this->commandStr.find(" "));
 	string progName = this->commandStr;
 	char **argv = this->getArgv(this->commandStr);
+	char **env = this->getEnv();
+	int pathsCount;
+	string *paths = this->getPaths(getenv("PATH"), pathsCount);
 	int childPid;
 	int status;
 
+	for (int i = 0; i < pathsCount; ++i) {
+		string f;
+		f = paths[i].c_str();
+		f += "/" + fileName;
 
-	childPid = fork();
+		if (access(f.c_str(), X_OK) != 0)
+			continue;
 
-	if (childPid == 0) {
-		cout << getpid() << endl;
-		cout << path << endl;
-		execv(path.c_str(), argv);
-	} else
-		wait(&status);
+		childPid = fork();
+
+		if (childPid == 0) {
+			cout << getpid() << endl;
+			cout << fileName << endl;
+
+			execve(f.c_str(), argv, environ);
+			cout << strerror(errno) << endl;
+		} else
+			wait(&status);
+
+		break;
+	}
 
 	return true;
 }
@@ -46,7 +63,7 @@ char** SystemCommand::getArgv(string command) {
 
 	char **argv;
 	string *words;
-	OneLine ol;
+	OneLine ol(" ");
 	int count;
 
 	ol.setOneLine(command);
@@ -59,5 +76,16 @@ char** SystemCommand::getArgv(string command) {
 	argv[count] = NULL;
 
 	return argv;
+}
+
+char** SystemCommand::getEnv() {
+	return environ;
+}
+
+string* SystemCommand::getPaths(char *path, int &size) {
+	OneLine ol(":");
+	ol.setOneLine(string(path));
+	ol.breakLine();
+	return ol.getWords(size);
 }
 

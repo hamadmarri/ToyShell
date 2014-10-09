@@ -7,7 +7,8 @@
 
 #include "oneline.h"
 
-OneLine::OneLine() {
+OneLine::OneLine(string delim) {
+	this->delim = strdup(delim.c_str());
 	this->wordCount = 0;
 	this->oneLine = "";
 	this->words = NULL;
@@ -16,11 +17,12 @@ OneLine::OneLine() {
 OneLine::~OneLine() {
 	//Clean up the array of words
 	this->resetLine();
+	free(this->delim);
 }
 
 void OneLine::breakLine() {
 
-	char delim[] = " ";
+//	char delim[] = " ";
 	char *token;
 	unsigned i = 0;
 	this->wordCount = 0;

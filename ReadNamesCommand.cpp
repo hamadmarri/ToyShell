@@ -9,7 +9,7 @@
 
 bool ReadNamesCommand::execute() {
 	ifstream inFile;
-	OneLine ol;
+	OneLine ol(" ");
 	string *partsFromFile;
 	int wordCountFromFile;
 	string alias;

@@ -25,7 +25,7 @@ Shell::Shell() {
 }
 
 void Shell::startShell() {
-	OneLine ol;
+	OneLine ol(" ");
 
 	printWelcomPage();
 
@@ -68,7 +68,7 @@ void Shell::executeCommand(OneLine &ol) {
 }
 
 void Shell::substituteAliases(string *parts, int wordCount) {
-	OneLine ol;
+	OneLine ol(" ");
 	string *subParts;
 	int subWordCount;
 

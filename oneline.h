@@ -17,7 +17,7 @@ using namespace std;
 
 class OneLine {
 public:
-	OneLine();
+	OneLine(string delim);
 	~OneLine();
 	void breakLine();
 	istream &readLine(istream& is);
@@ -27,6 +27,7 @@ public:
 	void setOneLine(string oneline);
 
 private:
+	char *delim;
 	string oneLine;
 	string *words;
 	int wordCount;
