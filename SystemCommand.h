@@ -8,6 +8,7 @@
 #ifndef __toyshell__BuiltInCommand__
 #define __toyshell__BuiltInCommand__
 
+#include <iostream>
 #include <cstdlib>
 #include <string>
 #include "Command.h"
@@ -21,6 +22,9 @@ public:
 	~SystemCommand();
 
 	bool execute();
+
+private:
+	char** getArgv(string command);
 
 };
 
