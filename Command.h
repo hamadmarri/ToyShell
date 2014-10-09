@@ -9,11 +9,21 @@
 
 #include <string>
 
+using namespace std;
+
+
 class Command {
 public:
 	virtual ~Command(){};
 	virtual bool execute() = 0;
-	virtual std::string getCommandString() = 0;
+
+	string getCommandString();
+	string getCommentString();
+	void setCommand(string command);
+
+protected:
+	string commandStr;
+	string commentStr;
 };
 
 #endif

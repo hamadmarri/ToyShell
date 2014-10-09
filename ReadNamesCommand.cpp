@@ -20,7 +20,7 @@ bool ReadNamesCommand::execute() {
 		return false;
 	}
 
-	inFile.open(parts[1].c_str());
+	inFile.open(args[1].c_str());
 
 	// delete old aliases
 	this->shell->aliases.deleteAllItems();

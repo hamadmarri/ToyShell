@@ -13,6 +13,6 @@ bool SetTerminatorCommand::execute() {
 		return false;
 	}
 
-	this->shell->terminator = parts[1];
+	this->shell->terminator = args[1];
 	return true;
 }

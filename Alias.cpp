@@ -7,9 +7,12 @@
 
 #include "Alias.h"
 
-Alias::Alias(string alias, string command) {
+Alias::Alias(string alias, string commandStr) {
 	this->alias = alias;
-	this->command = new SystemCommand(command);
+
+	this->setCommand(commandStr);
+
+	this->command = new SystemCommand(this->commandStr);
 }
 
 Alias::~Alias() {
@@ -22,10 +25,6 @@ bool Alias::execute() {
 
 string Alias::getAliasString() const {
 	return this->alias;
-}
-
-string Alias::getCommandString() {
-	return this->command->getCommandString();
 }
 
 bool Alias::operator!=(const Alias &rhs) {

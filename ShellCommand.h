@@ -25,12 +25,9 @@ public:
 
 	virtual bool execute() = 0;
 
-	string getCommandString();
-
 protected:
-	string command;
 	Shell *shell;
-	string *parts;
+	string *args;
 	int wordCount;
 };
 

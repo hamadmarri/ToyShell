@@ -12,19 +12,19 @@ bool NewNameCommand::execute() {
 	if (wordCount < 2) {
 		cout << "must specify the alias name\n";
 		return false;
-	} else if (this->shell->isBuiltinCommand(parts[1])) {
+	} else if (this->shell->isBuiltinCommand(args[1])) {
 		cout << "cannot make an alias has the same name of a built-in command\n";
 		return false;
 	} else if (wordCount < 3) {
-		als = new Alias(parts[1], "");
+		als = new Alias(args[1], "");
 		this->shell->aliases.deleteItem(als);
 		delete als;
 	} else if (wordCount >= 3) {
-		string alias = parts[1];
+		string alias = args[1];
 		string command = "";
 
 		for (int i = 2; i < wordCount; i++)
-			command += parts[i] + ' ';
+			command += args[i] + ' ';
 
 		als = new Alias(alias, command);
 		if (this->shell->aliases.find(alias))

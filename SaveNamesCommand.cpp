@@ -16,7 +16,7 @@ bool SaveNamesCommand::execute() {
 		return false;
 	}
 
-	outFile.open(parts[1].c_str());
+	outFile.open(args[1].c_str());
 
 	for (unsigned long i = 0; i < this->shell->aliases.getLength(); i++) {
 		alias = this->shell->aliases.at(i);

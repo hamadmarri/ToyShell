@@ -9,6 +9,9 @@
 #ifndef __toyshell__Invoker__
 #define __toyshell__Invoker__
 
+#define DEBUG_MODE
+
+
 #include <iostream>
 #include "Command.h"
 #include <deque>

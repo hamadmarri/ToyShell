@@ -8,17 +8,14 @@
 #include "SystemCommand.h"
 
 SystemCommand::SystemCommand(string command) {
-	this->command = command;
+	this->setCommand(command);
 }
 
 SystemCommand::~SystemCommand() {
-	this->command = "";
+	this->commandStr = "";
 }
 
 bool SystemCommand::execute() {
-	return !system(this->command.c_str());
+	return !system(this->commandStr.c_str());
 }
 
-string SystemCommand::getCommandString() {
-	return this->command;
-}

@@ -18,14 +18,12 @@ using namespace std;
 class Alias: public Command {
 public:
 
-	Alias(string alias, string command);
+	Alias(string alias, string commandStr);
 	~Alias();
 
 	bool execute();
 
 	string getAliasString() const;
-
-	string getCommandString();
 
 	bool operator!=(const Alias &rhs);
 

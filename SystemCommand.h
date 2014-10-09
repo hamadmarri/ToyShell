@@ -22,10 +22,6 @@ public:
 
 	bool execute();
 
-	string getCommandString();
-
-private:
-	string command;
 };
 
 #endif /* defined(__toyshell__BuiltInCommand__) */

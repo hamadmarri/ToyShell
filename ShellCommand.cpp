@@ -9,28 +9,31 @@
 
 ShellCommand::ShellCommand(Shell *shell, string *parts, int wordCount) {
 
+	string tempCommand = "";
+
 	// get all command line
-	this->command = "";
 	for (int i = 0; i < wordCount; i++) {
-		this->command += parts[i];
+		tempCommand += parts[i];
 		if (i < wordCount - 1)
-			this->command += ' ';
+			tempCommand += ' ';
 	}
 
 	// deep copy for parts
-	this->parts = new string[wordCount];
-	for (int i = 0; i < wordCount; i++)
-		this->parts[i] = parts[i];
+	this->args = new string[wordCount];
+	for (int i = 0; i < wordCount; i++) {
+		// TODO: might be right before the word like $anything
+		if (parts[i] == "$")
+			break;
 
+		this->args[i] = parts[i];
+	}
+
+	this->setCommand(tempCommand);
 	this->shell = shell;
 	this->wordCount = wordCount;
 }
 
 ShellCommand::~ShellCommand() {
-	delete[] this->parts;
-}
-
-string ShellCommand::getCommandString() {
-	return this->command;
+	delete[] this->args;
 }
 

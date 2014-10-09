@@ -13,6 +13,6 @@ bool SetShellNameCommand::execute() {
 		return false;
 	}
 
-	this->shell->shellName = parts[1];
+	this->shell->shellName = args[1];
 	return true;
 }
