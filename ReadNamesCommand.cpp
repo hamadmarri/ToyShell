@@ -23,7 +23,7 @@ bool ReadNamesCommand::execute() {
 	inFile.open(args[1].c_str());
 
 	// delete old aliases
-	this->shell->aliases.deleteAllItems();
+	this->shell->aliases->deleteAllItems();
 
 	while (ol.readLine(inFile)) {
 		partsFromFile = ol.getWords(wordCountFromFile);
@@ -36,7 +36,7 @@ bool ReadNamesCommand::execute() {
 				command += ' ';
 		}
 
-		this->shell->aliases.add(new Alias(alias, command));
+		this->shell->aliases->add(new Alias(this->shell, alias, command));
 	}
 
 	inFile.close();

@@ -12,13 +12,16 @@
 #include <string>
 #include "Command.h"
 #include "SystemCommand.h"
+#include "Shell.h"
+
+class Shell;
 
 using namespace std;
 
 class Alias: public Command {
 public:
 
-	Alias(string alias, string commandStr);
+	Alias(Shell *shell, string alias, string commandStr);
 	~Alias();
 
 	bool execute();
@@ -28,6 +31,7 @@ public:
 	bool operator!=(const Alias &rhs);
 
 private:
+	Shell *shell;
 	string alias;
 	Command *command;
 };

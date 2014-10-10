@@ -17,6 +17,10 @@
 #include "SystemCommand.h"
 #include "ShellCommand.h"
 #include "LinkedList.h"
+#include <vector>
+
+
+class LinkedList;
 
 using namespace std;
 
@@ -37,6 +41,7 @@ enum BuiltinCommandsEnum {
 class Shell {
 public:
 	Shell();
+	~Shell();
 
 	void startShell();
 	void endShell();
@@ -55,7 +60,8 @@ private:
 	unsigned int numberOfCommands;
 	string builtinCommands[9];
 	Invoker invoker;
-	LinkedList aliases;
+	LinkedList *aliases;
+
 
 	friend class NewNameCommand;
 	friend class SetShellNameCommand;

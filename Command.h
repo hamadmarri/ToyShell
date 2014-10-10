@@ -11,10 +11,9 @@
 
 using namespace std;
 
-
 class Command {
 public:
-	virtual ~Command(){};
+	virtual ~Command() { };
 	virtual bool execute() = 0;
 
 	string getCommandString();

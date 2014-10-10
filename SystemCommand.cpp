@@ -15,7 +15,8 @@
 
 extern char **environ;
 
-SystemCommand::SystemCommand(string command) {
+SystemCommand::SystemCommand(Shell *shell, string command) {
+	this->shell = shell;
 	this->setCommand(command);
 }
 
@@ -44,18 +45,21 @@ bool SystemCommand::execute() {
 		childPid = fork();
 
 		if (childPid == 0) {
-			cout << getpid() << endl;
-			cout << fileName << endl;
+//			cout << getpid() << endl;
+//			cout << fileName << endl;
 
 			execve(f.c_str(), argv, environ);
 			cout << strerror(errno) << endl;
-		} else
+		} else {
 			wait(&status);
+			return true;
+		}
 
 		break;
 	}
 
-	return true;
+	cout << strerror(errno) << endl;
+	return false;
 }
 
 char** SystemCommand::getArgv(string command) {

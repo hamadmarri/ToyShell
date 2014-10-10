@@ -9,6 +9,6 @@
 
 bool NewNamesCommand::execute() {
 
-	this->shell->aliases.printList();
+	this->shell->aliases->printList();
 	return true;
 }

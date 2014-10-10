@@ -17,7 +17,7 @@ class Shell;
 
 using namespace std;
 
-class ShellCommand: public Command {
+class ShellCommand : public Command {
 public:
 	ShellCommand(Shell *shell, string *parts, int wordCount);
 

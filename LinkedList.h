@@ -13,6 +13,7 @@
 
 using namespace std;
 
+class Alias;
 class LinkedList;
 // needed for friend line below
 

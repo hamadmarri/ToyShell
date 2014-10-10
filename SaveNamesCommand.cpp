@@ -18,8 +18,8 @@ bool SaveNamesCommand::execute() {
 
 	outFile.open(args[1].c_str());
 
-	for (unsigned long i = 0; i < this->shell->aliases.getLength(); i++) {
-		alias = this->shell->aliases.at(i);
+	for (unsigned long i = 0; i < this->shell->aliases->getLength(); i++) {
+		alias = this->shell->aliases->at(i);
 		outFile << alias->getAliasString() << ' ' << alias->getCommandString()
 				<< endl;
 	}

@@ -7,12 +7,13 @@
 
 #include "Alias.h"
 
-Alias::Alias(string alias, string commandStr) {
+Alias::Alias(Shell *shell, string alias, string commandStr) {
+	this->shell = shell;
 	this->alias = alias;
 
 	this->setCommand(commandStr);
 
-	this->command = new SystemCommand(this->commandStr);
+	this->command = new SystemCommand(shell, this->commandStr);
 }
 
 Alias::~Alias() {

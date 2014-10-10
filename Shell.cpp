@@ -8,6 +8,9 @@
 #include "Shell.h"
 
 Shell::Shell() {
+
+	this->aliases = new LinkedList();
+
 	this->shellName = "toyshell";
 	this->terminator = "->";
 	this->numberOfCommands = 1;
@@ -22,6 +25,10 @@ Shell::Shell() {
 	this->builtinCommands[6] = "newnames";
 	this->builtinCommands[7] = "savenewnames";
 	this->builtinCommands[8] = "readnewnames";
+}
+
+Shell::~Shell() {
+	delete this->aliases;
 }
 
 void Shell::startShell() {
@@ -79,7 +86,7 @@ void Shell::substituteAliases(string *parts, int wordCount) {
 			break;
 
 		if (isAlias(parts[i])) {
-			ol.setOneLine(aliases.find(parts[i])->getCommandString());
+			ol.setOneLine(aliases->find(parts[i])->getCommandString());
 			subParts = ol.getWords(subWordCount);
 
 			// recursive subsitution
@@ -119,7 +126,8 @@ void Shell::executeBuiltinCommand(string *parts, int wordCount) {
 		int value;
 		buffer >> value;
 		if (!invoker.execute(value - 1))
-			cout << "error: the number is out of range, use 'history' to double check\n";
+			cout
+					<< "error: the number is out of range, use 'history' to double check\n";
 
 	} else if (parts[0] == builtinCommands[BuiltinCommandsEnum::NEWNAME]) {
 		cmd = new NewNameCommand(this, parts, wordCount);
@@ -136,7 +144,7 @@ void Shell::executeBuiltinCommand(string *parts, int wordCount) {
 }
 
 void Shell::executeSystemCommand(string line) {
-	Command *cmd = new SystemCommand(line);
+	Command *cmd = new SystemCommand(this, line);
 	this->invoker.addAndExecuteCommand(cmd);
 }
 
@@ -149,7 +157,7 @@ bool Shell::isBuiltinCommand(string &command) {
 }
 
 bool Shell::isAlias(string &command) {
-	return (aliases.find(command) != NULL);
+	return (aliases->find(command) != NULL);
 }
 
 void Shell::printWelcomPage() {
@@ -163,5 +171,4 @@ void Shell::printWelcomPage() {
 void Shell::endShell() {
 	cout << "bye\n";
 }
-
 
