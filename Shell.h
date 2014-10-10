@@ -17,7 +17,7 @@
 #include "SystemCommand.h"
 #include "ShellCommand.h"
 #include "LinkedList.h"
-#include <vector>
+#include "Jobs.h"
 
 
 class LinkedList;
@@ -61,6 +61,7 @@ private:
 	string builtinCommands[9];
 	Invoker invoker;
 	LinkedList *aliases;
+	Jobs jobs;
 
 
 	friend class NewNameCommand;
