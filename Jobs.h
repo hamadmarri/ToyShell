@@ -11,6 +11,7 @@
 #include <iostream>
 #include <vector>
 #include <ctime>
+#include <string>
 #include "Command.h"
 
 using namespace std;
@@ -21,11 +22,13 @@ public:
 		this->pid = pid;
 		this->command = command;
 		this->createdTime = time(0);
+		this->status = "in progress";
 	}
 	;
 	int pid;
 	Command *command;
 	time_t createdTime;
+	string status; // in progress, completed
 };
 
 class Jobs {

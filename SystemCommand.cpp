@@ -33,6 +33,12 @@ bool SystemCommand::execute() {
 	string *paths = this->getPaths(getenv("PATH"), pathsCount);
 	int childPid;
 	int status;
+	bool bg = false;
+
+	// check if user asked to be background
+	int i = 0;
+	while (argv[i++] != NULL);
+	bg = (*argv[i - 2] == '-');
 
 	for (int i = 0; i < pathsCount; ++i) {
 		string f;
@@ -45,9 +51,6 @@ bool SystemCommand::execute() {
 		childPid = fork();
 
 		if (childPid == 0) {
-//			cout << getpid() << endl;
-//			cout << fileName << endl;
-
 			execve(f.c_str(), argv, environ);
 			cout << strerror(errno) << endl;
 		} else {
