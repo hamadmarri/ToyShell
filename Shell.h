@@ -18,6 +18,7 @@
 #include "ShellCommand.h"
 #include "LinkedList.h"
 #include "Jobs.h"
+#include <cstdlib>
 
 
 class LinkedList;

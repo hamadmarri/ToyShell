@@ -67,14 +67,18 @@ void Shell::executeCommand(OneLine &ol) {
 	if (parts[0] == "backjobs") {
 		jobs.printJobs();
 		return;
+	} else if (parts[0] == "frontjob") {
+		jobs.waitForJob(atoi(parts[1].c_str()));
+		return;
 	}
 
 	if (isBuiltinCommand(parts[0])) {
 		executeBuiltinCommand(parts, wordCount);
 	} else {
 		string line = "";
-		for (int i = 0; i < wordCount; i++)
+		for (int i = 0; i < wordCount; i++) {
 			line += parts[i] + ' ';
+		}
 
 		executeSystemCommand(line);
 	}

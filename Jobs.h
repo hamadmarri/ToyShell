@@ -44,7 +44,7 @@ public:
 	void addJob(int pid, Command *command);
 	void removeJob(unsigned int i);
 	void printJobs();
-	void waitForJob();
+	void waitForJob(unsigned int i);
 
 private:
 	string formatTime(vector<Job>::iterator it);

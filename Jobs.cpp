@@ -63,6 +63,20 @@ void Jobs::updateStatus(vector<Job>::iterator it) {
 		it->status = "completed";
 }
 
-void Jobs::waitForJob() {
+void Jobs::waitForJob(unsigned int i) {
+	int status;
+	string commandString;
 
+	if (i < 1 || i > jobs.size()) {
+		cout << "There is no job with id: " << i << endl;
+		return;
+	}
+
+	commandString = jobs.at(i - 1).command->getCommandString();
+
+	cout << commandString.substr(0, commandString.size() - 2) << endl;
+
+	waitpid(jobs.at(i - 1).pid, &status, WUNTRACED);
+
+	jobs.erase(jobs.begin() + i - 1);
 }

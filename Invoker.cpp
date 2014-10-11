@@ -21,11 +21,6 @@ void Invoker::addCommand(Command *cmd) {
 
 bool Invoker::addAndExecuteCommand(Command *cmd) {
 	addCommand(cmd);
-
-#ifdef DEBUG_MODE
-	cout << cmd->getCommentString() << endl;
-#endif
-
 	return cmd->execute();
 }
 
