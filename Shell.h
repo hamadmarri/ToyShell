@@ -71,6 +71,7 @@ private:
 	friend class ReadNamesCommand;
 	friend class PrintHistoryCommand;
 	friend class NewNamesCommand;
+	friend class SystemCommand;
 };
 
 #endif /* defined(__toyshell__Shell__) */

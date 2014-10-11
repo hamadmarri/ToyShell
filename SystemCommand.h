@@ -13,6 +13,12 @@
 #include <string>
 #include "Command.h"
 #include "Shell.h"
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <errno.h>
+#include <cstring>
+#include "oneline.h"
 
 class Shell;
 

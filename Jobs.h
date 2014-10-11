@@ -13,6 +13,11 @@
 #include <ctime>
 #include <string>
 #include "Command.h"
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <cstdlib>
+
 
 using namespace std;
 
@@ -42,6 +47,9 @@ public:
 	void waitForJob();
 
 private:
+	string formatTime(vector<Job>::iterator it);
+	void updateStatus(vector<Job>::iterator it);
+
 	vector<Job> jobs;
 };
 

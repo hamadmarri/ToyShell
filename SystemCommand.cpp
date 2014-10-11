@@ -6,12 +6,7 @@
 //
 
 #include "SystemCommand.h"
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <errno.h>
-#include <cstring>
-#include "oneline.h"
+
 
 extern char **environ;
 
@@ -37,8 +32,12 @@ bool SystemCommand::execute() {
 
 	// check if user asked to be background
 	int i = 0;
-	while (argv[i++] != NULL);
-	bg = (*argv[i - 2] == '-');
+	while (argv[i++] != NULL)
+		;
+	if (*argv[i - 2] == '-') {
+		argv[i - 2] = NULL;
+		bg = true;
+	}
 
 	for (int i = 0; i < pathsCount; ++i) {
 		string f;
@@ -54,7 +53,12 @@ bool SystemCommand::execute() {
 			execve(f.c_str(), argv, environ);
 			cout << strerror(errno) << endl;
 		} else {
-			wait(&status);
+
+			if (bg)
+				this->shell->jobs.addJob(childPid, this);
+			else
+				wait(&status);
+
 			return true;
 		}
 
@@ -83,7 +87,6 @@ char** SystemCommand::getArgv(string command) {
 
 	return argv;
 }
-
 
 string* SystemCommand::getPaths(char *path, int &size) {
 	OneLine ol(":");

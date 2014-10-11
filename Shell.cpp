@@ -63,6 +63,12 @@ void Shell::executeCommand(OneLine &ol) {
 	// aliases subsitution
 	substituteAliases(parts, wordCount);
 
+	// TODO: the following line should be removed it is just for testing
+	if (parts[0] == "backjobs") {
+		jobs.printJobs();
+		return;
+	}
+
 	if (isBuiltinCommand(parts[0])) {
 		executeBuiltinCommand(parts, wordCount);
 	} else {

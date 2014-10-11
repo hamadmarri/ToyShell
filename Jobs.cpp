@@ -30,22 +30,37 @@ void Jobs::printJobs() {
 	unsigned int i = 1;
 	vector<Job>::iterator it;
 
+	for (it = jobs.begin(); it < jobs.end(); it++, i++) {
+		updateStatus(it);
+
+		cout << '[' << i << ']' << '\t' << it->status << '\t'
+				<< it->command->getCommandString() << '\t' << it->pid << '\t'
+				<< formatTime(it) << endl;
+
+		if (it->status == "completed")
+			jobs.erase(it);
+	}
+}
+
+string Jobs::formatTime(vector<Job>::iterator it) {
 	// to get time as string
 	char timeAsString[80];
 	struct tm * timeinfo;
 
-	for (it = jobs.begin(); it < jobs.end(); it++, i++) {
-		// format time first
+	// format time
+	timeinfo = localtime(&it->createdTime);
+	strftime(timeAsString, 80, "%c.", timeinfo);
 
-		timeinfo = localtime(&it->createdTime);
+	return timeAsString;
+}
 
-		strftime(timeAsString, 80, "%c.", timeinfo);
-		//puts(timeAsString);
+void Jobs::updateStatus(vector<Job>::iterator it) {
+	int status;
+	int waitReturn;
 
-		cout << '[' << i << ']' << '\t' << it->status << '\t'
-				<< it->command->getCommandString() << '\t' << it->pid << '\t'
-				<< timeAsString << endl;
-	}
+	waitReturn = waitpid(it->pid, &status, WNOHANG);
+	if (waitReturn != 0 && WIFEXITED(status))
+		it->status = "completed";
 }
 
 void Jobs::waitForJob() {
