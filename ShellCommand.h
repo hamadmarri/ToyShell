@@ -38,5 +38,9 @@ protected:
 #include "ReadNamesCommand.h"
 #include "PrintHistoryCommand.h"
 #include "NewNamesCommand.h"
+#include "ExclamationCommand.h"
+#include "StopCommand.h"
+#include "CondCommand.h"
+#include "NotCondCommand.h"
 
 #endif /* defined(__toyshell__ShellCommand__) */

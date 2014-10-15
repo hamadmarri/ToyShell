@@ -13,6 +13,7 @@ Shell::Shell() {
 
 	this->shellName = "toyshell";
 	this->terminator = "->";
+	this->builtinCommandsCount = 13;
 	this->numberOfCommands = 1;
 
 	// initialize builtin commands
@@ -25,6 +26,10 @@ Shell::Shell() {
 	this->builtinCommands[6] = "newnames";
 	this->builtinCommands[7] = "savenewnames";
 	this->builtinCommands[8] = "readnewnames";
+	this->builtinCommands[9] = "backjobs";
+	this->builtinCommands[10] = "frontjob";
+	this->builtinCommands[11] = "cond";
+	this->builtinCommands[12] = "notcond";
 }
 
 Shell::~Shell() {
@@ -76,9 +81,8 @@ void Shell::executeCommand(OneLine &ol) {
 		executeBuiltinCommand(parts, wordCount);
 	} else {
 		string line = "";
-		for (int i = 0; i < wordCount; i++) {
+		for (int i = 0; i < wordCount; i++)
 			line += parts[i] + ' ';
-		}
 
 		executeSystemCommand(line);
 	}
@@ -115,42 +119,43 @@ void Shell::substituteAliases(string *parts, int wordCount) {
 
 void Shell::executeBuiltinCommand(string *parts, int wordCount) {
 
+	Command *cmd = getBuiltinCommand(parts, wordCount);
+
+	if (cmd) {
+		if (parts[0] != builtinCommands[BuiltinCommandsEnum::EXCLAMATION])
+			this->invoker.addAndExecuteCommand(cmd);
+		else
+			cmd->execute();
+	}
+}
+
+Command* Shell::getBuiltinCommand(string *parts, int wordCount) {
 	ShellCommand *cmd = NULL;
 
-	if (parts[0] == builtinCommands[BuiltinCommandsEnum::STOP]) {
-		endShell();
-	} else if (parts[0] == builtinCommands[BuiltinCommandsEnum::SETSHELLNAME]) {
+	if (parts[0] == builtinCommands[BuiltinCommandsEnum::STOP])
+		cmd = new StopCommand(this, parts, wordCount);
+	else if (parts[0] == builtinCommands[BuiltinCommandsEnum::SETSHELLNAME])
 		cmd = new SetShellNameCommand(this, parts, wordCount);
-	} else if (parts[0]
-			== builtinCommands[BuiltinCommandsEnum::SETTERMINATOR]) {
+	else if (parts[0] == builtinCommands[BuiltinCommandsEnum::SETTERMINATOR])
 		cmd = new SetTerminatorCommand(this, parts, wordCount);
-	} else if (parts[0] == builtinCommands[BuiltinCommandsEnum::HISTORY]) {
+	else if (parts[0] == builtinCommands[BuiltinCommandsEnum::HISTORY])
 		cmd = new PrintHistoryCommand(this, parts, wordCount);
-	} else if (parts[0] == builtinCommands[BuiltinCommandsEnum::EXCLAMATION]) {
-		if (wordCount < 2) {
-			cout << "must specify the number of history command\n";
-			return;
-		}
-
-		istringstream buffer(parts[1]);
-		int value;
-		buffer >> value;
-		if (!invoker.execute(value - 1))
-			cout
-					<< "error: the number is out of range, use 'history' to double check\n";
-
-	} else if (parts[0] == builtinCommands[BuiltinCommandsEnum::NEWNAME]) {
+	else if (parts[0] == builtinCommands[BuiltinCommandsEnum::EXCLAMATION])
+		cmd = new ExclamationCommand(this, parts, wordCount);
+	else if (parts[0] == builtinCommands[BuiltinCommandsEnum::NEWNAME])
 		cmd = new NewNameCommand(this, parts, wordCount);
-	} else if (parts[0] == builtinCommands[BuiltinCommandsEnum::NEWNAMES]) {
+	else if (parts[0] == builtinCommands[BuiltinCommandsEnum::NEWNAMES])
 		cmd = new NewNamesCommand(this, parts, wordCount);
-	} else if (parts[0] == builtinCommands[BuiltinCommandsEnum::SAVENEWNAMES]) {
+	else if (parts[0] == builtinCommands[BuiltinCommandsEnum::SAVENEWNAMES])
 		cmd = new SaveNamesCommand(this, parts, wordCount);
-	} else if (parts[0] == builtinCommands[BuiltinCommandsEnum::READNEWNAMES]) {
+	else if (parts[0] == builtinCommands[BuiltinCommandsEnum::READNEWNAMES])
 		cmd = new ReadNamesCommand(this, parts, wordCount);
-	}
+	else if (parts[0] == builtinCommands[BuiltinCommandsEnum::COND])
+		cmd = new CondCommand(this, parts, wordCount);
+	else if (parts[0] == builtinCommands[BuiltinCommandsEnum::NOT_COND])
+			cmd = new NotCondCommand(this, parts, wordCount);
 
-	if (cmd)
-		this->invoker.addAndExecuteCommand(cmd);
+	return cmd;
 }
 
 void Shell::executeSystemCommand(string line) {
@@ -159,7 +164,7 @@ void Shell::executeSystemCommand(string line) {
 }
 
 bool Shell::isBuiltinCommand(string &command) {
-	for (int i = 0; i < 9; i++)
+	for (int i = 0; i < builtinCommandsCount; i++)
 		if (command == builtinCommands[i])
 			return true;
 

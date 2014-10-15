@@ -34,7 +34,7 @@ bool SystemCommand::execute() {
 	int i = 0;
 	while (argv[i++] != NULL)
 		;
-	if (*argv[i - 2] == '-') {
+	if (string(argv[i - 2]) == "-") {
 		argv[i - 2] = NULL;
 		bg = true;
 	}

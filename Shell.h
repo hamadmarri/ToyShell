@@ -10,7 +10,7 @@
 
 #include <iostream>
 #include <string>
-#include "sstream"
+#include <sstream>
 #include <cstring>
 #include "oneline.h"
 #include "Invoker.h"
@@ -35,7 +35,11 @@ enum BuiltinCommandsEnum {
 	NEWNAME,
 	NEWNAMES,
 	SAVENEWNAMES,
-	READNEWNAMES
+	READNEWNAMES,
+	BACKJOBS,
+	FRONTJOB,
+	COND,
+	NOT_COND
 };
 }
 
@@ -51,15 +55,17 @@ private:
 	void printWelcomPage();
 	void executeCommand(OneLine &ol);
 	void executeBuiltinCommand(string *parts, int wordCount);
+	Command* getBuiltinCommand(string *parts, int wordCount);
 	void executeSystemCommand(string line);
 	bool isBuiltinCommand(string &command);
 	void substituteAliases(string *parts, int wordCount);
 	bool isAlias(string &command);
 
+	int builtinCommandsCount;
 	string shellName;
 	string terminator;
 	unsigned int numberOfCommands;
-	string builtinCommands[9];
+	string builtinCommands[13];
 	Invoker invoker;
 	LinkedList *aliases;
 	Jobs jobs;
@@ -72,7 +78,11 @@ private:
 	friend class ReadNamesCommand;
 	friend class PrintHistoryCommand;
 	friend class NewNamesCommand;
+	friend class ExclamationCommand;
+	friend class StopCommand;
 	friend class SystemCommand;
+	friend class CondCommand;
+	friend class NotCondCommand;
 };
 
 #endif /* defined(__toyshell__Shell__) */
