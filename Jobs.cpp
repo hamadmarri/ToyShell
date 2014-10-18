@@ -80,3 +80,11 @@ void Jobs::waitForJob(unsigned int i) {
 
 	jobs.erase(jobs.begin() + i - 1);
 }
+
+void Jobs::waitForAllJobs() {
+	int status;
+	int pid;
+	while ((pid = wait(&status)) != -1)
+		cout << "job with pid = " << pid << " has been completed" << endl;
+}
+

@@ -62,7 +62,8 @@ void Shell::executeCommand(OneLine &ol) {
 	int wordCount;
 	string* parts = ol.getWords(wordCount);
 
-	if (parts[0] == "")
+	// check if white space or comment
+	if (parts[0] == "" || parts[0] == "$")
 		return;
 
 	// aliases subsitution
@@ -153,7 +154,7 @@ Command* Shell::getBuiltinCommand(string *parts, int wordCount) {
 	else if (parts[0] == builtinCommands[BuiltinCommandsEnum::COND])
 		cmd = new CondCommand(this, parts, wordCount);
 	else if (parts[0] == builtinCommands[BuiltinCommandsEnum::NOT_COND])
-			cmd = new NotCondCommand(this, parts, wordCount);
+		cmd = new NotCondCommand(this, parts, wordCount);
 
 	return cmd;
 }
@@ -184,6 +185,9 @@ void Shell::printWelcomPage() {
 }
 
 void Shell::endShell() {
+
+	this->jobs.waitForAllJobs();
+
 	cout << "bye\n";
 }
 

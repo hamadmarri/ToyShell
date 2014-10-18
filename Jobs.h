@@ -45,6 +45,7 @@ public:
 	void removeJob(unsigned int i);
 	void printJobs();
 	void waitForJob(unsigned int i);
+	void waitForAllJobs();
 
 private:
 	string formatTime(vector<Job>::iterator it);
