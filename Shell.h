@@ -16,10 +16,10 @@
 #include "Invoker.h"
 #include "SystemCommand.h"
 #include "ShellCommand.h"
+#include "PipedCommand.h"
 #include "LinkedList.h"
 #include "Jobs.h"
 #include <cstdlib>
-
 
 class LinkedList;
 
@@ -60,6 +60,7 @@ private:
 	bool isBuiltinCommand(string &command);
 	void substituteAliases(string *parts, int wordCount);
 	bool isAlias(string &command);
+	bool isPiped(string *parts, int wordCount);
 
 	int builtinCommandsCount;
 	string shellName;
@@ -69,7 +70,6 @@ private:
 	Invoker invoker;
 	LinkedList *aliases;
 	Jobs jobs;
-
 
 	friend class NewNameCommand;
 	friend class SetShellNameCommand;
@@ -83,6 +83,7 @@ private:
 	friend class SystemCommand;
 	friend class CondCommand;
 	friend class NotCondCommand;
+	friend class PipedCommand;
 };
 
 #endif /* defined(__toyshell__Shell__) */

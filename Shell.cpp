@@ -184,6 +184,14 @@ void Shell::printWelcomPage() {
 	cout << endl;
 }
 
+bool Shell::isPiped(string *parts, int wordCount) {
+	for (int i = 0; i < wordCount; ++i)
+		if (parts[i] == "@")
+			return true;
+
+	return false;
+}
+
 void Shell::endShell() {
 
 	this->jobs.waitForAllJobs();
