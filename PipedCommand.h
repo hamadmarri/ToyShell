@@ -16,6 +16,19 @@ class Shell;
 
 using namespace std;
 
+
+class CommandWithIOSpecification {
+public:
+	CommandWithIOSpecification() {
+		this->cmd = NULL;
+		this->input = "";
+		this->output = "";
+	}
+	Command *cmd;
+	string input;
+	string output;
+};
+
 class PipedCommand: public Command {
 public:
 	PipedCommand(Shell *shell, string *parts, int wordCount);
@@ -25,10 +38,10 @@ public:
 
 private:
 
-	void addCommandToList(string partOfPipedCommand);
+	void addCommandToList(string *parts, int wordCount, string input, string output);
 
 	Shell *shell;
-	vector<Command*> commands;
+	vector<CommandWithIOSpecification*> commands;
 
 };
 
