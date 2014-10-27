@@ -78,7 +78,9 @@ void Shell::executeCommand(OneLine &ol) {
 		return;
 	}
 
-	if (isBuiltinCommand(parts[0])) {
+	if (isPiped(parts, wordCount)) {
+		executePipedCommand(parts, wordCount);
+	} else if (isBuiltinCommand(parts[0])) {
 		executeBuiltinCommand(parts, wordCount);
 	} else {
 		string line = "";
@@ -162,6 +164,11 @@ Command* Shell::getBuiltinCommand(string *parts, int wordCount) {
 void Shell::executeSystemCommand(string line) {
 	Command *cmd = new SystemCommand(this, line);
 	this->invoker.addAndExecuteCommand(cmd);
+}
+
+void Shell::executePipedCommand(string *parts, int wordCount) {
+	PipedCommand *pc = new PipedCommand(this, parts, wordCount);
+	this->invoker.addAndExecuteCommand(pc);
 }
 
 bool Shell::isBuiltinCommand(string &command) {

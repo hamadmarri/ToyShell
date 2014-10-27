@@ -9,8 +9,20 @@
 #define PIPEDCOMMAND_H_
 
 #include <vector>
+#include <cstdlib>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <errno.h>
+#include <cstring>
+#include <stdio.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include "Command.h"
 #include "Shell.h"
+
+#define IN 0
+#define OUT 1
 
 class Shell;
 
@@ -39,6 +51,8 @@ public:
 private:
 
 	void addCommandToList(string *parts, int wordCount, string input, string output);
+	void executeChilds();
+	void executePipe(CommandWithIOSpecification *cwiosParent, int fd[], int inFile);
 
 	Shell *shell;
 	vector<CommandWithIOSpecification*> commands;

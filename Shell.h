@@ -61,6 +61,7 @@ private:
 	void substituteAliases(string *parts, int wordCount);
 	bool isAlias(string &command);
 	bool isPiped(string *parts, int wordCount);
+	void executePipedCommand(string *parts, int wordCount);
 
 	int builtinCommandsCount;
 	string shellName;
