@@ -7,8 +7,6 @@
 
 #include "PipedCommand.h"
 
-// cat [ main.cpp @ grep return ] file1.txt
-
 PipedCommand::PipedCommand(Shell *shell, string *parts, int wordCount) {
 	OneLine ol(" ");
 	string partOfPipedCommand = "";
@@ -78,26 +76,30 @@ void PipedCommand::addCommandToList(string *parts, int wordCount, string input,
 }
 
 bool PipedCommand::execute() {
+	int pid;
 
-	switch (fork()) {
+	switch (pid = fork()) {
 	case -1:
 		//fork failure
-		perror("Fork fail");
-		exit(2);
+		perror("Fork fail: cannot execute this command");
+		return false;
 		break;
 	case 0: //child process
 		executeChilds();
+		exit(EXIT_SUCCESS);
 		break;
 	default: // shell process
 		int status;
-		int pid;
-		while ((pid = wait(&status)) != -1)
-			cout << "job with pid = " << pid << " has been completed" << endl;
+		//waitpid(pid, &status, WUNTRACED);
+		wait(&status);
 		break;
 	}
 	return true;
 }
 
+// cat [ main.cpp @ grep return ] file1.txt
+// cat [ main.cpp @ grep s @ sort -r
+// ls @ sort -r
 void PipedCommand::executeChilds() {
 	int fd[2];
 	int outFile = -1;
@@ -109,77 +111,89 @@ void PipedCommand::executeChilds() {
 		outFile = -1;
 
 		// check if input from a file
-		if (cwiosParent->input.substr(0, 1) == "[") {
-			inFile = open(cwiosParent->output.substr(2).c_str(), O_RDONLY,
+		if (cwiosParent->input.size() > 0
+				&& cwiosParent->input.substr(0, 1) == "[") {
+			inFile = open(cwiosParent->input.substr(2).c_str(), O_RDONLY,
 					S_IRUSR | S_IWUSR);
 		}
+
 		// check if output is a pipe
-		else if (cwiosParent->output == "@") {
+		if (cwiosParent->output == "@") {
 			// creates a pipe here, returns error if it failed
 			if (pipe(fd) == -1) {
 				perror("Pipe fail");
 				exit(1);
 			}
 			executePipe(cwiosParent, fd, inFile);
+			continue;
 		}
 
 		// check if outout to a file
-		else if (cwiosParent->output.substr(0, 1) == "]") {
+		if (cwiosParent->output.size() > 0
+				&& cwiosParent->output.substr(0, 1) == "]") {
 			outFile = open(cwiosParent->output.substr(2).c_str(),
 					O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
 
 			dup2(outFile, fileno(stdout));
 		}
+
+		// for stdout
+		// check if input is set
+		// copy the input file description if is set
+		if (inFile != -1)
+			dup2(inFile, fileno(stdin));
+
+//		cout << "b: " << cwiosParent->cmd->getCommandString() << endl;
+		cwiosParent->cmd->execute();
+//		cout << "a: " << cwiosParent->cmd->getCommandString() << endl;
+
+		exit(EXIT_SUCCESS);
 	}
 }
 
 void PipedCommand::executePipe(CommandWithIOSpecification *cwiosParent,
 		int fd[], int inFile) {
 
-	OneLine ol(" ");
-	string *parts;
-	int wordCount;
-	char **parentArgs;
+	int status;
+	int pid;
 
-	switch (fork()) // Forks the program, and then operates based on if it is the child, the parent, or if the fork failed
-	{
+	// Forks the program, and then operates based on if it is the child, the parent, or if the fork failed
+	switch (pid = fork()) {
 	case -1: //fork failure
 		perror("Fork fail");
-		exit(2);
+		exit(EXIT_FAILURE);
 		break;
 	case 0: //child process
-		dup2(fd[IN], fileno(stdin)); //copies file description of pipe output to the standard output file of the shell
+		//copies file description of pipe output to the standard output file of the shell
+		dup2(fd[IN], fileno(stdin));
 		close(fd[IN]);
 		close(fd[OUT]);
-		execvp(parentArgs[0], parentArgs); //where does the output of last go? stdout normally, but write end of pipe
-		exit(3);
 		break;
 	default: //parent process
+
+//		cout << "b: " << cwiosParent->cmd->getCommandString() << endl;
+
 
 		// copy output descriptor
 		dup2(fd[OUT], fileno(stdout));
 
+		// copy the input file description if is set
 		if (inFile != -1)
 			dup2(inFile, fileno(stdin));
 
 		close(fd[IN]);
 		close(fd[OUT]);
 
-		ol.setOneLine(cwiosParent->cmd->getCommandString());
-		parts = ol.getWords(wordCount);
-		parentArgs = new char*[wordCount + 1];
 
-		for (int i = 0; i < wordCount; ++i)
-			parentArgs[i] = strdup(parts[i].c_str());
+		cwiosParent->cmd->execute();
 
-		parentArgs[wordCount] = NULL;
-
-		execvp(parentArgs[0], parentArgs); // where is sort getting input from ?stdin normally, but read end of pipe
+//		cout << "a: " << cwiosParent->cmd->getCommandString() << endl;
 
 		if (inFile != -1)
 			close(inFile);
 
-		exit(4);
+		// waitpid(pid, &status, WUNTRACED);
+		exit(EXIT_SUCCESS);
 		break;
 	}
 }
