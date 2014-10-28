@@ -26,7 +26,7 @@ class LinkedList;
 using namespace std;
 
 
-#define NUM_OF_BLTIN_COMMANDS 14
+#define NUM_OF_BLTIN_COMMANDS 16
 
 namespace BuiltinCommandsEnum {
 enum BuiltinCommandsEnum {
@@ -43,7 +43,9 @@ enum BuiltinCommandsEnum {
 	FRONTJOB,
 	COND,
 	NOT_COND,
-	DISPLAY
+	DISPLAY,
+	USE_SCRIPT,
+	CULL
 };
 }
 
@@ -90,6 +92,8 @@ private:
 	friend class NotCondCommand;
 	friend class PipedCommand;
 	friend class DisplayCommand;
+	friend class UsescriptCommand;
+	friend class CullCommand;
 };
 
 #endif /* defined(__toyshell__Shell__) */

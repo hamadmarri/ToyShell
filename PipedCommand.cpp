@@ -151,7 +151,7 @@ void PipedCommand::executeChilds() {
 void PipedCommand::executePipe(CommandWithIOSpecification *cwiosParent,
 		int fd[], int inFile) {
 
-	int status;
+	// int status;
 	int pid;
 
 	// Forks the program, and then operates based on if it is the child, the parent, or if the fork failed

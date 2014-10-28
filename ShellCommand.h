@@ -43,5 +43,7 @@ protected:
 #include "CondCommand.h"
 #include "NotCondCommand.h"
 #include "DisplayCommand.h"
+#include "UsescriptCommand.h"
+#include "CullCommand.h"
 
 #endif /* defined(__toyshell__ShellCommand__) */

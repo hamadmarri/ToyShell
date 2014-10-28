@@ -1,12 +1,12 @@
 /*
- * Display.h
+ * CullCommand.h
  *
  *  Created on: 2014-10-27
  *      Author: hamadmarri
  */
 
-#ifndef DISPLAY_H_
-#define DISPLAY_H_
+#ifndef CULLCOMMAND_H_
+#define CULLCOMMAND_H_
 
 #include <string>
 #include "ShellCommand.h"
@@ -16,10 +16,10 @@ class ShellCommand;
 
 using namespace std;
 
-class DisplayCommand: public ShellCommand {
+class CullCommand: public ShellCommand {
 public:
-	DisplayCommand(Shell *shell, string *parts, int wordCount);
+	CullCommand(Shell *shell, string *parts, int wordCount);
 	bool execute();
 };
 
-#endif /* DISPLAY_H_ */
+#endif /* CULLCOMMAND_H_ */

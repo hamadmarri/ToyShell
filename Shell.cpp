@@ -31,6 +31,8 @@ Shell::Shell() {
 	this->builtinCommands[11] = "cond";
 	this->builtinCommands[12] = "notcond";
 	this->builtinCommands[13] = "display";
+	this->builtinCommands[14] = "usescript";
+	this->builtinCommands[15] = "cull";
 
 }
 
@@ -164,6 +166,10 @@ Command* Shell::getBuiltinCommand(string *parts, int wordCount) {
 		cmd = new NotCondCommand(this, parts, wordCount);
 	else if (parts[0] == builtinCommands[BuiltinCommandsEnum::DISPLAY])
 		cmd = new DisplayCommand(this, parts, wordCount);
+	else if (parts[0] == builtinCommands[BuiltinCommandsEnum::USE_SCRIPT])
+			cmd = new UsescriptCommand(this, parts, wordCount);
+	else if (parts[0] == builtinCommands[BuiltinCommandsEnum::CULL])
+				cmd = new CullCommand(this, parts, wordCount);
 
 	return cmd;
 }

@@ -63,6 +63,20 @@ void Jobs::updateStatus(vector<Job>::iterator it) {
 		it->status = "completed";
 }
 
+void Jobs::killJob(unsigned int i) {
+	int pid;
+
+	if (i < 1 || i > jobs.size()) {
+		cout << "There is no job with id: " << i << endl;
+		return;
+	}
+
+	pid = jobs.at(i - 1).pid;
+	kill(pid, SIGKILL);
+
+	removeJob(i - 1);
+}
+
 void Jobs::waitForJob(unsigned int i) {
 	int status;
 	string commandString;
