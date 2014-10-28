@@ -25,6 +25,9 @@ class LinkedList;
 
 using namespace std;
 
+
+#define NUM_OF_BLTIN_COMMANDS 14
+
 namespace BuiltinCommandsEnum {
 enum BuiltinCommandsEnum {
 	STOP,
@@ -39,7 +42,8 @@ enum BuiltinCommandsEnum {
 	BACKJOBS,
 	FRONTJOB,
 	COND,
-	NOT_COND
+	NOT_COND,
+	DISPLAY
 };
 }
 
@@ -67,7 +71,7 @@ private:
 	string shellName;
 	string terminator;
 	unsigned int numberOfCommands;
-	string builtinCommands[13];
+	string builtinCommands[NUM_OF_BLTIN_COMMANDS];
 	Invoker invoker;
 	LinkedList *aliases;
 	Jobs jobs;
@@ -85,6 +89,7 @@ private:
 	friend class CondCommand;
 	friend class NotCondCommand;
 	friend class PipedCommand;
+	friend class DisplayCommand;
 };
 
 #endif /* defined(__toyshell__Shell__) */

@@ -13,7 +13,7 @@ Shell::Shell() {
 
 	this->shellName = "toyshell";
 	this->terminator = "->";
-	this->builtinCommandsCount = 13;
+	this->builtinCommandsCount = NUM_OF_BLTIN_COMMANDS;
 	this->numberOfCommands = 1;
 
 	// initialize builtin commands
@@ -30,6 +30,8 @@ Shell::Shell() {
 	this->builtinCommands[10] = "frontjob";
 	this->builtinCommands[11] = "cond";
 	this->builtinCommands[12] = "notcond";
+	this->builtinCommands[13] = "display";
+
 }
 
 Shell::~Shell() {
@@ -50,8 +52,11 @@ void Shell::startShell() {
 		// execute command
 		executeCommand(ol);
 
+		if (ol.returnLine().size() > 0)
+			numberOfCommands++;
+
 		// print prompt
-		cout << shellName << "[" << ++numberOfCommands << "]" << terminator
+		cout << shellName << "[" << numberOfCommands << "]" << terminator
 				<< ' ';
 	}
 
@@ -157,6 +162,8 @@ Command* Shell::getBuiltinCommand(string *parts, int wordCount) {
 		cmd = new CondCommand(this, parts, wordCount);
 	else if (parts[0] == builtinCommands[BuiltinCommandsEnum::NOT_COND])
 		cmd = new NotCondCommand(this, parts, wordCount);
+	else if (parts[0] == builtinCommands[BuiltinCommandsEnum::DISPLAY])
+		cmd = new DisplayCommand(this, parts, wordCount);
 
 	return cmd;
 }
@@ -203,6 +210,6 @@ void Shell::endShell() {
 
 	this->jobs.waitForAllJobs();
 
-	 cout << "bye\n";
+	cout << "bye\n";
 }
 

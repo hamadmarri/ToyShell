@@ -143,10 +143,7 @@ void PipedCommand::executeChilds() {
 		if (inFile != -1)
 			dup2(inFile, fileno(stdin));
 
-//		cout << "b: " << cwiosParent->cmd->getCommandString() << endl;
 		cwiosParent->cmd->execute();
-//		cout << "a: " << cwiosParent->cmd->getCommandString() << endl;
-
 		exit(EXIT_SUCCESS);
 	}
 }
@@ -170,10 +167,6 @@ void PipedCommand::executePipe(CommandWithIOSpecification *cwiosParent,
 		close(fd[OUT]);
 		break;
 	default: //parent process
-
-//		cout << "b: " << cwiosParent->cmd->getCommandString() << endl;
-
-
 		// copy output descriptor
 		dup2(fd[OUT], fileno(stdout));
 
@@ -187,12 +180,9 @@ void PipedCommand::executePipe(CommandWithIOSpecification *cwiosParent,
 
 		cwiosParent->cmd->execute();
 
-//		cout << "a: " << cwiosParent->cmd->getCommandString() << endl;
-
 		if (inFile != -1)
 			close(inFile);
 
-		// waitpid(pid, &status, WUNTRACED);
 		exit(EXIT_SUCCESS);
 		break;
 	}
