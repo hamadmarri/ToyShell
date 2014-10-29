@@ -14,8 +14,13 @@ PipedCommand::PipedCommand(Shell *shell, string *parts, int wordCount) {
 	int tempWordCount;
 	string input = "";
 	string output = "";
-
+	this->backjob = false;
 	this->shell = shell;
+
+	for (int i = 0; i < wordCount; ++i)
+	this->setCommand(this->getCommandString() + " " + parts[i] + " ");
+
+	checkBackjob(parts, wordCount);
 
 	for (int i = 0; i < wordCount; ++i) {
 		if (parts[i] == "@") { // && partOfPipedCommand.length() > 0) {
@@ -52,6 +57,21 @@ PipedCommand::PipedCommand(Shell *shell, string *parts, int wordCount) {
 PipedCommand::~PipedCommand() {
 }
 
+void PipedCommand::checkBackjob(string *parts, int &wordCount) {
+	for (int i = 0; i < wordCount; ++i) {
+		if (parts[i] == "-") {
+			this->backjob = true;
+
+			// shift the left portion to the right
+			for (int j = i; j < wordCount - 1; ++j)
+				parts[j] = parts[j + 1];
+
+			wordCount--;
+			break;
+		}
+	}
+}
+
 void PipedCommand::addCommandToList(string *parts, int wordCount, string input,
 		string output) {
 
@@ -76,9 +96,9 @@ void PipedCommand::addCommandToList(string *parts, int wordCount, string input,
 }
 
 bool PipedCommand::execute() {
-	int pid;
+	int childPid;
 
-	switch (pid = fork()) {
+	switch (childPid = fork()) {
 	case -1:
 		//fork failure
 		perror("Fork fail: cannot execute this command");
@@ -90,8 +110,12 @@ bool PipedCommand::execute() {
 		break;
 	default: // shell process
 		int status;
-		//waitpid(pid, &status, WUNTRACED);
-		wait(&status);
+
+		if (this->backjob)
+			this->shell->jobs.addJob(childPid, this);
+
+		//waitpid(childPid, &status, WUNTRACED);
+		// wait(&status);
 		break;
 	}
 	return true;
@@ -176,8 +200,6 @@ void PipedCommand::executePipe(CommandWithIOSpecification *cwiosParent,
 
 		close(fd[IN]);
 		close(fd[OUT]);
-
-
 		cwiosParent->cmd->execute();
 
 		if (inFile != -1)

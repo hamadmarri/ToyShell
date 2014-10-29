@@ -57,8 +57,8 @@ bool SystemCommand::execute() {
 			if (bg)
 				this->shell->jobs.addJob(childPid, this);
 			else
-//				waitpid(childPid, &status, WUNTRACED);
-				wait(&status);
+				waitpid(childPid, &status, WUNTRACED);
+//				wait(&status);
 
 			return true;
 		}

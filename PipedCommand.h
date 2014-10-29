@@ -53,10 +53,11 @@ private:
 	void addCommandToList(string *parts, int wordCount, string input, string output);
 	void executeChilds();
 	void executePipe(CommandWithIOSpecification *cwiosParent, int fd[], int inFile);
+	void checkBackjob(string *parts, int &wordCount);
 
 	Shell *shell;
 	vector<CommandWithIOSpecification*> commands;
-
+	bool backjob;
 };
 
 #endif /* PIPEDCOMMAND_H_ */
