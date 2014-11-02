@@ -17,8 +17,15 @@ PipedCommand::PipedCommand(Shell *shell, string *parts, int wordCount) {
 	this->backjob = false;
 	this->shell = shell;
 
-	for (int i = 0; i < wordCount; ++i)
-	this->setCommand(this->getCommandString() + " " + parts[i] + " ");
+	for (int i = 0; i < wordCount; ++i) {
+		if (parts[i] == "$")
+			break;
+
+		this->setCommand(this->getCommandString() + " " + parts[i]);
+	}
+
+	ol.setOneLine(this->getCommandString());
+	parts = ol.getWords(wordCount);
 
 	checkBackjob(parts, wordCount);
 
@@ -58,17 +65,10 @@ PipedCommand::~PipedCommand() {
 }
 
 void PipedCommand::checkBackjob(string *parts, int &wordCount) {
-	for (int i = 0; i < wordCount; ++i) {
-		if (parts[i] == "-") {
-			this->backjob = true;
 
-			// shift the left portion to the right
-			for (int j = i; j < wordCount - 1; ++j)
-				parts[j] = parts[j + 1];
-
-			wordCount--;
-			break;
-		}
+	if (parts[wordCount - 1] == "-") {
+		this->backjob = true;
+		wordCount--;
 	}
 }
 
@@ -114,8 +114,8 @@ bool PipedCommand::execute() {
 		if (this->backjob)
 			this->shell->jobs.addJob(childPid, this);
 
-		//waitpid(childPid, &status, WUNTRACED);
-		// wait(&status);
+//		waitpid(childPid, &status, WUNTRACED);
+//		wait(&status);
 		break;
 	}
 	return true;

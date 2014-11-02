@@ -24,7 +24,11 @@ public:
 	bool execute();
 
 private:
-	void executeCommand(OneLine &ol);
+	bool executeCommand(OneLine &ol);
+	bool isExceedLimit(Command *cmd);
+
+	unsigned int fileRecursionLimit;
+
 };
 
 #endif /* USESCRIPTCOMMAND_H_ */

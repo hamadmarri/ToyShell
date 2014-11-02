@@ -1,0 +1,13 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <iomanip>
+#include <cstdlib>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+#include <signal.h>
+#include <time.h>
+#include <fcntl.h>
+#include <errno.h>
